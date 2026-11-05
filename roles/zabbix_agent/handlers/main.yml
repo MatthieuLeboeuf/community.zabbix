@@ -25,6 +25,14 @@
   ansible.windows.win_service:
     name: "{{ zabbix_agent_win_service }}"
     state: restarted
+    failure_actions:
+      - type: restart
+        delay_ms: 5000
+      - type: none
+  register: zabbix_restart
+  retries: 5
+  delay: 10
+  until: zabbix_restart is succeeded
   when:
     - ansible_facts['os_family'] == "Windows"
 
